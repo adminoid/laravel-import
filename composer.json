@@ -1,0 +1,21 @@
+{
+    "name": "petja/import",
+    "description": "",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Peter Zenin",
+            "email": "info@romb.ru"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Petja\\Import": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
