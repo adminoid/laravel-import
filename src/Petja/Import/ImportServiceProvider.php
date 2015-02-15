@@ -47,13 +47,14 @@ class ImportServiceProvider extends ServiceProvider {
 		});
 
         $this->app->bind('petja::command.parse.dl', function() {
-            return new Commands\GenerateUriForCategories();
+            return new Commands\ParseDownload();
         });
 
 		$this->commands(array(
 			'petja::command.parse.pdf',
 			'petja::command.parse.xml',
-			'petja::command.uri.cats'
+			'petja::command.uri.cats',
+			'petja::command.parse.dl',
 		));
 	}
 

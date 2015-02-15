@@ -1,4 +1,4 @@
-<?php
+<?php namespace Petja\Import\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,7 +11,7 @@ class ParseDownload extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'parse:d';
+	protected $name = 'parse:dl';
 
 	/**
 	 * The console command description.
@@ -40,7 +40,7 @@ class ParseDownload extends Command {
 
         $who = $this->argument('who');
 
-
+        var_dump($who);
 
         $this->error('Нет аргументов, нет опций');
 
