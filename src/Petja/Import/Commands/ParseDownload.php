@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Petja\Import\Downloads\Download;
 
 class ParseDownload extends Command {
 
@@ -40,7 +41,9 @@ class ParseDownload extends Command {
 
         $who = $this->argument('who');
 
-        var_dump($who);
+        $dl = new Download($this, $who);
+
+        $dl->run();
 
         $this->error('Нет аргументов, нет опций');
 
