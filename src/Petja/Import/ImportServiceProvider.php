@@ -46,6 +46,10 @@ class ImportServiceProvider extends ServiceProvider {
 			return new Commands\GenerateUriForCategories();
 		});
 
+        $this->app->bind('petja::command.parse.dl', function() {
+            return new Commands\GenerateUriForCategories();
+        });
+
 		$this->commands(array(
 			'petja::command.parse.pdf',
 			'petja::command.parse.xml',
