@@ -54,12 +54,17 @@ class ImportServiceProvider extends ServiceProvider {
             return new Commands\FixesRun();
         });
 
+        $this->app->bind('petja::command.thumb.gen', function() {
+            return new Commands\ThumbGen();
+        });
+
 		$this->commands(array(
 			'petja::command.parse.pdf',
 			'petja::command.parse.xml',
 			'petja::command.uri.cats',
 			'petja::command.parse.dl',
 			'petja::command.fixes.run',
+			'petja::command.thumb.gen',
 		));
 	}
 

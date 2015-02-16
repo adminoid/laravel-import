@@ -40,14 +40,23 @@ class Fixes {
     public function trimField()
     {
 
-        $images = \Image::all();
+        $products = \Product::all();
 
-        foreach ($images as $image) {
-            $image->path = trim($image->path);
-            $image->save();
+        foreach ($products as $product) {
+            $product->instruction_pdf = trim($product->instruction_pdf);
+            $product->instruction_pdf_src = trim($product->instruction_pdf_src);
+            $product->save();
         }
 
 
+    }
+
+    public function rmField()
+    {
+        $product = \Product::find(54);
+        echo $product->instruction_pdf_src . PHP_EOL;
+        $product->instruction_pdf_src = '';
+        $product->save();
     }
 
 }
