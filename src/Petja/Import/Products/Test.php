@@ -27,18 +27,36 @@ class Test {
 
         $this->cmd->info('Делаем сиды:');
         \Iseed::generateSeed('categories');
-        \Iseed::generateSeed('category_types');
         \Iseed::generateSeed('categorizables');
+        \Iseed::generateSeed('category_types');
         \Iseed::generateSeed('imageables');
         \Iseed::generateSeed('images');
-        \Iseed::generateSeed('products');
+
         \Iseed::generateSeed('p_nebulizers');
         \Iseed::generateSeed('p_acoustic_toothbrushes');
         \Iseed::generateSeed('p_fat_analysers_and_scales');
         \Iseed::generateSeed('p_pedometers_and_activity_analysers');
         \Iseed::generateSeed('p_phonendoscopes');
         \Iseed::generateSeed('p_thermometers');
+
+        \Iseed::generateSeed('thumbs');
+        \Iseed::generateSeed('products');
         die;
+
+    }
+
+    public function testThumbs()
+    {
+        foreach (\Image::all() as $img) {
+            echo $img->path . PHP_EOL;
+
+            foreach ($img->thumbs()->get() as $thumb) {
+                echo $thumb->path . PHP_EOL;
+            }
+
+            $this->cmd->info('=====================');
+
+        }
 
     }
 

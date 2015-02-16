@@ -51,12 +51,53 @@ class Fixes {
 
     }
 
+    public function changeThumbsPaths()
+    {
+        foreach (\Thumb::all() as $thumb) {
+            echo $thumb->path . PHP_EOL;
+
+            $thumb->path = str_replace('/home/vargant/PhpstormProjects/ikmed.ru/public/', 'http://ikmed.ru/', $thumb->path);
+
+            $thumb->save();
+
+        }
+
+    }
+
     public function rmField()
     {
         $product = \Product::find(54);
         echo $product->instruction_pdf_src . PHP_EOL;
         $product->instruction_pdf_src = '';
         $product->save();
+    }
+
+    public function trimImages()
+    {
+        foreach (\Image::all() as $image) {
+            $image->path = trim($image->path);
+            $image->save();
+        }
+
+    }
+
+    public function replaceStarToXInImages()
+    {
+        foreach (\Image::all() as $image) {
+
+            $pixelSizes = (string) $image->pixel_sizes;
+
+            $image->pixel_sizes = str_replace('*', 'x', $pixelSizes);
+
+            $image->save();
+
+            //echo $image->pixel_sizes;
+
+            echo "\n";
+
+            /*$image->pixel_size = trim($image->path);
+            $image->save();*/
+        }
     }
 
 }

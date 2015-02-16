@@ -47,36 +47,63 @@ class ThumbGen extends Command {
 
             foreach (json_decode($image->pixel_sizes) as $size) {
 
-                $sizes = explode('*', $size);
+                $sizes = explode('x', $size);
 
                 $w = $sizes[0];
                 $h = $sizes[1];
 
-                echo "$w x $h";
-                echo "\n";
-                echo $image->path;
-                echo "\n";
+                //echo "$w x $h";
 
                 $url = parse_url($image->path);
+
+                $filename = basename($image->path);
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                $fName = basename($filename, ".jpg");
+
                 $filePath = 'public' . $url['path'];
 
-                echo "$filePath\n";
+                $fileDir = base_path() . '/' . dirname($filePath);
 
-                GDImage::make($filePath)->resize('200','200')->save($filePath . '.200x200');
+                if (!file_exists("$fileDir/thumbs")) {
+                    mkdir("$fileDir/thumbs", 0777, true);
+                }
+
+                $thumbFile = "$fileDir/thumbs/$fName-{$w}x$h.$ext";
 
 
+                var_dump($filePath);
+                var_dump($thumbFile);
 
-                //$img = GDImage::make($filePath);
+                $this->comment($image->product()->select('id')->first()->id);
 
+                /*if(!file_exists($thumbFile)){
 
-                /*$img->resize($w, $h);
-                //$img->insert('public/watermark.png');
-                $img->save('public/bar.jpg');*/
+                    GDImage::make($filePath)->resize($w,$h)->save($thumbFile);
+                }else{
+                    $this->info("Файл $thumbFile уже существует");
+                }*/
+
+                $GDImage = GDImage::make($filePath);
+
+                /*$callback = function ($constraint) { $constraint->upsize(); };
+                $GDImage->widen($w, $callback)->heighten($h, $callback);*/
+
+                $GDImage->resize($w, $h, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->resizeCanvas($w, $h)->save($thumbFile);
+
+                /*$thumb = new \Thumb(array(
+                    'pixel_size' => "{$w}x$h",
+                    'path' => $thumbFile
+                ));
+
+                $image->thumbs()->save($thumb);*/
+
 
             }
 
-            die;
-
+            //die;
 
         }
 
