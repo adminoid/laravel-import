@@ -50,11 +50,16 @@ class ImportServiceProvider extends ServiceProvider {
             return new Commands\ParseDownload();
         });
 
+        $this->app->bind('petja::command.fixes.run', function() {
+            return new Commands\FixesRun();
+        });
+
 		$this->commands(array(
 			'petja::command.parse.pdf',
 			'petja::command.parse.xml',
 			'petja::command.uri.cats',
 			'petja::command.parse.dl',
+			'petja::command.fixes.run',
 		));
 	}
 

@@ -1,5 +1,6 @@
 <?php namespace Petja\Import\Downloads;
-use Intervention\Image\Facades\Image;
+//use Intervention\Image\Facades\Image;
+use Jyggen\Curl\Request;
 
 /**
  * Created by PhpStorm.
@@ -26,60 +27,83 @@ class Download {
     public function run()
     {
         if($this->who == 'image'){
-
             $images = \Image::all();
-
             foreach ($images as $image) {
-                //echo $image->path . "\n";
-                $product = $image->product()->first();
-
-                //echo $product->id . "\n";
-
-                $from = $this->makeFrom($image, $product);
-                //var_dump($from);
-
-                /*$to = $this->makeTo($image, $product);
-                var_dump($to);*/
+                $to = $this->makeToPath($image);
+                $toFullPath = public_path() . '/' . $to;
+                if($this->imageDownload($image->src, $toFullPath)){
+                    $this->cmd->info("Путь в БД: http://ikmed.ru/$to");
+                    $image->path = "http://ikmed.ru/$to";
+                    $image->downloaded = true;
+                    $image->save();
+                }
             }
-
-
             $this->cmd->error('test778');
         }
     }
 
-    public function makeFrom($image, $product)
+    public function imageDownload($from, $toFullPath)
+    {
+
+        $this->cmd->comment("Закачка: $from");
+
+        $pathInfo = pathinfo($toFullPath);
+        $dir = $pathInfo['dirname'];
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        if (file_exists($toFullPath)) {
+            //unlink($toFullPath);
+            $this->cmd->line("Файл $toFullPath уже существует");
+            return true;
+        }
+
+        $this->cmd->line("Закачиваем в $toFullPath");
+
+        if (!file_exists($toFullPath)) {
+            $raw = file_get_contents($from);
+            return file_put_contents($toFullPath, $raw);
+        }
+
+        return false;
+
+
+    }
+
+    public function makeToPath($image)
     {
         if($this->who == 'image'){
 
-            $path = trim($image->path);
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $product = $image->product()->with('categories')->first();
 
-            if(!$extension){
-
-                //$image->product()->detach();
-
-                //$product->save();
-
-
-
-                echo "({$image->id}) {$image->path}\n";
-
-                $image->delete();
-
+            if(count($product->categories) != 1){
+                die('ОПАСНОСТЕ!!!!!');
             }
 
 
-            //return trim($image->path);
+            $test = $product->categories[0]->ancestorsAndSelf()->get();
+
+            unset($test[0]);
+
+            $to = 'images/products/';
+
+            foreach ($test as $t) {
+
+                $to .= "{$t->id}/";
+            }
+
+            $ext = pathinfo($image->src, PATHINFO_EXTENSION);
+
+            $to .= "{$product->uri}-{$image->id}.$ext\n";
+
+            return $to;
 
         }
 
         return false;
     }
 
-    public function makeTo($image, $product)
-    {
-        if($this->who == 'image'){
-            return basename($image->path);
-        }
-    }
+
 }
